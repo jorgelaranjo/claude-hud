@@ -78,11 +78,13 @@ Save as `language: "en"` or `language: "zh-Hans"`.
   - "Agents status" - ◐ explore [haiku]: Finding code
   - "Todo progress" - ▸ Fix bug (2/5 tasks)
   - "Project name" - my-project path display
+  - "Added directories" - +repo +shared workspace directories from /add-dir
   - "Git status" - git:(main*) branch indicator
   - "Config counts" - 2 CLAUDE.md | 4 rules
   - "Token breakdown" - (in: 45k, cache: 12k)
   - "Output speed" - out: 42.1 tok/s
   - "Usage limits" - 5h: 25% | 7d: 10%
+  - "Usage reset label" - show or hide the `resets in` prefix
   - "Compact usage" - 5h: 25% (1h 30m) shorter format
   - "Session duration" - ⏱️ 5m
   - "Session name" - fix-auth-bug (session slug or custom title)
@@ -95,6 +97,7 @@ Save as `language: "en"` or `language: "zh-Hans"`.
   - "Memory usage" - process memory footprint
   - "Prompt cache" - cache TTL countdown
   - "Claude Code version" - the running CC version
+  - "Compaction count" - Compactions: 2 after /compact or auto-compaction
   - "Advisor model" - Advisor: Opus 4.7 (when /advisor is configured)
 
 ### Q5: Turn On (based on chosen preset)
@@ -130,6 +133,7 @@ If user chooses "Enter custom text", use AskUserQuestion to get their text. Save
   - "Agents status" - ◐ explore [haiku]: Finding code
   - "Todo progress" - ▸ Fix bug (2/5 tasks)
   - "Project name" - my-project path display
+  - "Added directories" - +repo +shared workspace directories from /add-dir
   - "Git status" - git:(main*) branch indicator
   - "Session name" - fix-auth-bug (session slug or custom title)
   - "Session tokens" - Tokens 12.8M (in: 7k, out: 28k, cache: 12.8M)
@@ -141,8 +145,10 @@ If user chooses "Enter custom text", use AskUserQuestion to get their text. Save
   - "Memory usage" - process memory footprint
   - "Prompt cache" - cache TTL countdown
   - "Claude Code version" - the running CC version
+  - "Compaction count" - Compactions: 2 after /compact or auto-compaction
   - "Advisor model" - Advisor: Opus 4.7 (when /advisor is configured)
   - "Usage bar style" - ██░░ 25% visual bar (only if usageBarEnabled is true)
+  - "Usage reset label" - show or hide the `resets in` prefix
   - "Compact usage" - 5h: 25% (1h 30m) shorter format (only if usageCompact is false)
 
 If more than 4 items ON, show Activity items (Tools, Agents, Todos, Project, Git) first.
@@ -158,7 +164,9 @@ Info items (Counts, Tokens, Usage, Speed, Duration) can be turned off via "Reset
   - "Output speed" - out: 42.1 tok/s
   - "Usage limits" - 5h: 25% | 7d: 10%
   - "Usage bar style" - ██░░ 25% visual bar (only if usageBarEnabled is false)
+  - "Usage reset label" - show or hide the `resets in` prefix
   - "Compact usage" - 5h: 25% (1h 30m) shorter format (only if usageCompact is false)
+  - "Added directories" - +repo +shared workspace directories from /add-dir
   - "Session name" - fix-auth-bug (session slug or custom title)
   - "Session tokens" - Tokens 12.8M (in: 7k, out: 28k, cache: 12.8M)
   - "Session duration" - ⏱️ 5m
@@ -170,6 +178,7 @@ Info items (Counts, Tokens, Usage, Speed, Duration) can be turned off via "Reset
   - "Memory usage" - process memory footprint
   - "Prompt cache" - cache TTL countdown
   - "Claude Code version" - the running CC version
+  - "Compaction count" - Compactions: 2 after /compact or auto-compaction
   - "Advisor model" - Advisor: Opus 4.7 (when /advisor is configured)
 
 ### Q3: Git Style (only if Git is currently enabled)
@@ -226,7 +235,7 @@ If user chooses "Remove", set `display.customLine` to `""` in config.
 
 **Full** (everything ON):
 - Activity: Tools ON, Skills ON, MCP ON, Agents ON, Todos ON
-- Info: Counts ON, Tokens ON, Usage ON, Cost ON, Duration ON, Session Name ON, Session Tokens ON, Reasoning Level ON, Output Style ON, Memory ON, Prompt Cache ON, CC Version ON, Advisor ON
+- Info: Added Dirs ON, Counts ON, Tokens ON, Usage ON, Reset Label ON, Cost ON, Duration ON, Session Name ON, Session Tokens ON, Reasoning Level ON, Output Style ON, Memory ON, Prompt Cache ON, CC Version ON, Compactions ON, Advisor ON
 - Git: ON (with dirty indicator, no ahead/behind)
 
 **Essential** (activity + git):
@@ -299,6 +308,7 @@ If user chooses "Remove", set `display.customLine` to `""` in config.
 | Session tokens | `display.showSessionTokens` |
 | Session start date | `display.showSessionStartDate` |
 | Last response time | `display.showLastResponseAt` |
+| Compaction count | `display.showCompactions` |
 | Reasoning level | `display.showEffortLevel` |
 | Output style | `display.showOutputStyle` |
 | Memory usage | `display.showMemoryUsage` |
