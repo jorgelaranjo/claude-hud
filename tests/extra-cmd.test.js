@@ -59,12 +59,18 @@ test('isExtraCmdAllowed requires explicit opt-in', () => {
   assert.equal(isExtraCmdAllowed({ CLAUDE_HUD_ALLOW_EXTRA_CMD: '0' }), false);
   assert.equal(isExtraCmdAllowed({ CLAUDE_HUD_ALLOW_EXTRA_CMD: '1' }), true);
   assert.equal(isExtraCmdAllowed({ CLAUDE_HUD_ALLOW_EXTRA_CMD: 'true' }), true);
+  assert.equal(isExtraCmdAllowed({ CLAUDE_HUD_ALLOW_EXTRA_CMD: ' TRUE ' }), true);
   assert.equal(isExtraCmdAllowed({ CLAUDE_HUD_ALLOW_EXTRA_CMD: 'yes' }), true);
   assert.equal(isExtraCmdAllowed({ CLAUDE_HUD_ALLOW_EXTRA_CMD: 'on' }), true);
 });
 
 test('parseExtraCmdArg ignores --extra-cmd unless explicitly enabled', () => {
   const argv = ['node', 'index.js', '--extra-cmd', 'echo hello'];
+  assert.equal(parseExtraCmdArg(argv, {}), null);
+});
+
+test('parseExtraCmdArg ignores --extra-cmd=value unless explicitly enabled', () => {
+  const argv = ['node', 'index.js', '--extra-cmd=echo hello'];
   assert.equal(parseExtraCmdArg(argv, {}), null);
 });
 
