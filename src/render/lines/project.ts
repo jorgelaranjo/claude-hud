@@ -1,7 +1,7 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import type { RenderContext } from '../../types.js';
-import { getModelName, formatModelName, getProviderLabel } from '../../stdin.js';
+import { getModelName, formatModelName } from '../../stdin.js';
 import { getOutputSpeed } from '../../speed-tracker.js';
 import { git as gitColor, gitBranch as gitBranchColor, warning as warningColor, critical as criticalColor, label, model as modelColor, project as projectColor, red, green, yellow, dim, custom as customColor } from '../colors.js';
 import { t } from '../../i18n/index.js';
@@ -9,6 +9,7 @@ import { renderCostEstimate } from './cost.js';
 import { renderAdvisorLine } from './advisor.js';
 import { normalizeAddedDirs, sanitize as sanitizeDisplayText, basenameOf, truncateBasename, MAX_RENDERED_ADDED_DIRS } from './added-dirs.js';
 import { hyperlink, getFileHref, safeHyperlink } from '../../utils/hyperlinks.js';
+import { formatModelDisplay } from '../model-display.js';
 
 function resolvePathWithinCwd(cwd: string, candidatePath: string): string | null {
   const resolvedCwd = path.resolve(cwd);
@@ -33,27 +34,7 @@ export function renderProjectLine(ctx: RenderContext): string | null {
 
   if (display?.showModel !== false) {
     const model = formatModelName(getModelName(ctx.stdin), ctx.config?.display?.modelFormat, ctx.config?.display?.modelOverride);
-
-    let effortSuffix = '';
-    if (ctx.effortLevel && ctx.effortSymbol) {
-      effortSuffix = ` ${ctx.effortSymbol} ${ctx.effortLevel}`;
-    } else if (ctx.effortLevel) {
-      effortSuffix = ` ${ctx.effortLevel}`;
-    }
-
-    const autoProvider = getProviderLabel(ctx.stdin);
-    let modelDisplay: string;
-    if (display?.showProvider) {
-      // Provider (custom name, else auto-detected) leads the model name.
-      const providerLabel = display?.providerName?.trim() || autoProvider;
-      const core = `${model}${effortSuffix}`;
-      modelDisplay = providerLabel ? `${providerLabel} | ${core}` : core;
-    } else {
-      // Default: auto-detected provider trails the model name (legacy layout).
-      modelDisplay = autoProvider
-        ? `${model} | ${autoProvider}${effortSuffix}`
-        : `${model}${effortSuffix}`;
-    }
+    const modelDisplay = formatModelDisplay(model, ctx);
     parts.push(modelColor(`[${modelDisplay}]`, colors));
   }
 

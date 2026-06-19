@@ -1,6 +1,6 @@
 import type { RenderContext } from '../types.js';
 import { isLimitReached } from '../types.js';
-import { getContextPercent, getBufferedPercent, getModelName, formatModelName, getProviderLabel, shouldHideUsage } from '../stdin.js';
+import { getContextPercent, getBufferedPercent, getModelName, formatModelName, shouldHideUsage } from '../stdin.js';
 import { getOutputSpeed } from '../speed-tracker.js';
 import { coloredBar, critical, git as gitColor, gitBranch as gitBranchColor, label, model as modelColor, project as projectColor, getContextColor, getQuotaColor, quotaBar, custom as customColor, RESET } from './colors.js';
 import { getAdaptiveBarWidth } from '../utils/terminal.js';
@@ -13,6 +13,7 @@ import type { TimeFormatMode, UsageValueMode } from '../config.js';
 import { formatResetTime } from './format-reset-time.js';
 import { formatTokens, formatContextValue } from '../utils/format.js';
 import { createDebug } from '../debug.js';
+import { formatModelDisplay } from './model-display.js';
 
 const debug = createDebug('context');
 
@@ -30,7 +31,7 @@ export function renderSessionLine(ctx: RenderContext): string {
   const percent = autocompactMode === 'disabled' ? rawPercent : bufferedPercent;
 
   if (autocompactMode === 'disabled') {
-    debug(`autocompactBuffer=disabled, showing raw ${rawPercent}% (buffered would be ${bufferedPercent}%`);
+    debug(`autocompactBuffer=disabled, showing raw ${rawPercent}% (buffered would be ${bufferedPercent}%)`);
   }
 
   const colors = ctx.config?.colors;
@@ -56,14 +57,7 @@ export function renderSessionLine(ctx: RenderContext): string {
   }
 
   // Model and context bar
-  const providerLabel = getProviderLabel(ctx.stdin);
-  const modelQualifier = providerLabel ?? undefined;
-  let modelDisplay = modelQualifier ? `${model} | ${modelQualifier}` : model;
-  if (ctx.effortLevel && ctx.effortSymbol) {
-    modelDisplay += ` ${ctx.effortSymbol} ${ctx.effortLevel}`;
-  } else if (ctx.effortLevel) {
-    modelDisplay += ` ${ctx.effortLevel}`;
-  }
+  const modelDisplay = formatModelDisplay(model, ctx);
 
   if (display?.showModel !== false && display?.showContextBar !== false) {
     parts.push(`${modelColor(`[${modelDisplay}]`, colors)} ${bar} ${contextValueDisplay}`);

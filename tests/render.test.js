@@ -710,6 +710,40 @@ test('renderProjectLine keeps the legacy trailing provider label when showProvid
   }
 });
 
+test('renderSessionLine shows custom provider before the model when showProvider is on', () => {
+  const ctx = baseContext();
+  ctx.stdin.model = { display_name: 'Claude Opus 4.6' };
+  ctx.config.display.showProvider = true;
+  ctx.config.display.providerName = 'MyProxy';
+  const line = stripAnsi(renderSessionLine(ctx));
+  assert.ok(line.includes('[MyProxy | Claude Opus 4.6]'), `got: ${line}`);
+});
+
+test('renderSessionLine falls back to auto-detected provider before the model', () => {
+  process.env.CLAUDE_CODE_USE_BEDROCK = '1';
+  try {
+    const ctx = baseContext();
+    ctx.stdin.model = { display_name: 'Claude Opus 4.6' };
+    ctx.config.display.showProvider = true;
+    const line = stripAnsi(renderSessionLine(ctx));
+    assert.ok(line.includes('[Bedrock | Claude Opus 4.6]'), `got: ${line}`);
+  } finally {
+    delete process.env.CLAUDE_CODE_USE_BEDROCK;
+  }
+});
+
+test('renderSessionLine keeps the legacy trailing provider label when showProvider is off', () => {
+  process.env.CLAUDE_CODE_USE_BEDROCK = '1';
+  try {
+    const ctx = baseContext();
+    ctx.stdin.model = { display_name: 'Claude Opus 4.6' };
+    const line = stripAnsi(renderSessionLine(ctx));
+    assert.ok(line.includes('[Claude Opus 4.6 | Bedrock]'), `got: ${line}`);
+  } finally {
+    delete process.env.CLAUDE_CODE_USE_BEDROCK;
+  }
+});
+
 test('renderProjectLine uses configurable element colors', () => {
   const ctx = baseContext();
   ctx.stdin.cwd = '/tmp/my-project';
